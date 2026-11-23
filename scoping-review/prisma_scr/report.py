@@ -291,8 +291,8 @@ def manuscript_md(store: Store, p: dict, stats: dict) -> str:
     L += ["## Abstract", "",
           f"**Background:** [AUTHOR] {(p.get('rationale') or '').strip()}", "",
           "**Objectives:** " + "; ".join(p["objectives"]) + ".", "",
-          f"**Eligibility criteria:** Sources addressing {pcc['concept'].lower()} among "
-          f"{pcc['population'].lower()} in the context of {pcc['context']}, published {years[0]}–{years[1]}.", "",
+          f"**Eligibility criteria:** Population: {pcc['population']}. Concept: {pcc['concept']}. "
+          f"Context: {pcc['context']}. Published {years[0]}–{years[1]}.", "",
           f"**Sources of evidence:** {', '.join(dbs + others) or '[sources]'}; last searched {last_search}.", "",
           "**Charting methods:** Data were charted using a standardised form "
           f"({len(fields)} items) developed for this review.", "",

@@ -1,0 +1,99 @@
+# PRISMA-ScR scoping review protocol
+# Companion review to the article "Alienation as Modernist Form" (Eliot, Faulkner, Hurston).
+# Draft for team discussion and OSF registration. Edit, then run the workflow in README.md.
+
+title: "Alienation in the criticism of T. S. Eliot, William Faulkner, and Zora Neale Hurston, 1990-2026: a scoping review"
+authors: ["[Author 1]", "[Author 2]"]
+registration: "To be registered on OSF (osf.io/registries) before screening begins"
+funding: "[describe funding, or 'none']"
+
+# Population - Concept - Context (JBI framework)
+pcc:
+  population: "Scholarly literary criticism (peer-reviewed articles, scholarly books and chapters, doctoral dissertations)"
+  concept: "Alienation and cognate concepts (estrangement, isolation, displacement, exclusion, marginalization, deracination) analysed as a theme, a formal principle, or a reader effect"
+  context: "Readings of T. S. Eliot's The Waste Land (1922), William Faulkner's The Sound and the Fury (1929), and Zora Neale Hurston's Their Eyes Were Watching God (1937), alone or in comparison with each other or with other modernist texts"
+
+objectives:
+  - "Map the volume, chronology, and publication venues of criticism on alienation in the three texts since 1990"
+  - "Identify the conceptions of alienation (psychological, social, racial, gendered, linguistic, cultural, economic) that critics use"
+  - "Identify the formal features (allusion, narrative voice, stream of consciousness, dialect, fragmentation, genre) through which critics locate alienation"
+  - "Describe the theoretical frameworks applied and how often readings are comparative or intersectional"
+  - "Identify gaps, including comparative work across the three texts and reception-based studies"
+
+rationale: >
+  Alienation is a long-standing keyword in criticism of modernism, but its meaning differs
+  across critical traditions: Marxian, existentialist, psychoanalytic, Black studies, feminist,
+  and dialect- or language-centred readings. Scholarship on Eliot, Faulkner, and Hurston has
+  developed largely in separate subfields. No review has mapped how critics of these three
+  canonical texts define alienation, which formal features they tie it to, and whether the
+  race, gender, and class dimensions emphasised in Hurston scholarship inform readings of Eliot
+  and Faulkner. A scoping review suits this question because the aim is to chart concepts and
+  approaches across a heterogeneous body of interpretive work, not to pool effects or judge
+  the quality of individual readings.
+
+eligibility:
+  years: [1990, 2026]
+  languages: ["en"]
+  publication_types: ["journal-article", "book", "book-chapter", "dissertation"]
+  inclusion:
+    - "Scholarly criticism that substantially discusses at least one of the three focal texts"
+    - "Explicitly analyses alienation or a cognate concept (estrangement, isolation, displacement, exclusion, marginalization) in that text"
+    - "Published 1990-2026 in English"
+  exclusion:
+    - "Mentions alienation only in passing (not a recurring analytical concern of the source)"
+    - "Concerns other works by the authors only (e.g. Absalom, Absalom!, Four Quartets, Mules and Men)"
+    - "Book reviews, encyclopedia entries, study guides, editorials, conference abstracts"
+    - "Pedagogical notes without an interpretive argument"
+    - "Concerns George Eliot or another 'Eliot' (search noise)"
+
+exclusion_reasons:
+  - "Focal text not substantially discussed"
+  - "Alienation not an analytical concern (passing mention)"
+  - "Ineligible publication type (review, guide, abstract)"
+  - "Outside date range or not in English"
+  - "Wrong author / search noise"
+  - "Duplicate publication (e.g. article reprinted as book chapter)"
+
+search:
+  date_of_search: null
+  databases:
+    openalex:
+      enabled: true
+      # Pilot 2026-11-23 (title/abstract, 1990-2026): 490 records, 363 typed as articles.
+      query: '(alienation OR alienated OR estrangement OR estranged OR displacement OR isolation) AND ("T. S. Eliot" OR "Waste Land" OR Faulkner OR "Sound and the Fury" OR Hurston OR "Their Eyes Were Watching God")'
+      max_results: 3000
+    crossref:
+      enabled: true
+      query: 'alienation estrangement Waste Land Eliot Faulkner Sound and the Fury Hurston Their Eyes Were Watching God'
+      max_results: 1000
+    pubmed:
+      enabled: false
+      query: ''
+      max_results: 0
+  # Run manually and import with `prisma-scr import FILE --source NAME` (syntax in search_strategies.md):
+  #   MLA International Bibliography (EBSCOhost)   <- primary database for this review
+  #   JSTOR, Project MUSE, Web of Science Arts & Humanities Citation Index, Scopus,
+  #   ProQuest Dissertations & Theses Global
+  other_sources:
+    - "Backward and forward citation searching of included sources"
+    - "Hand-searching: The Faulkner Journal, Faulkner Studies, The Mississippi Quarterly, Time Present (T. S. Eliot Society), The T. S. Eliot Studies Annual, Zora Neale Hurston Forum, African American Review, Modernism/modernity (2015-2026 issues)"
+    - "Annual bibliographies: American Literary Scholarship (chapters on Faulkner, Eliot/Pound, and 1900-1930s fiction)"
+
+screening:
+  reviewers: ["R1", "R2"]
+  priority_terms: ["alienation", "alienated", "estrangement", "waste land", "sound and the fury", "their eyes were watching god", "faulkner", "hurston", "dialect", "modernism"]
+
+charting:
+  fields:
+    - {name: source_type, type: category, options: [article, book, chapter, dissertation]}
+    - {name: focal_texts, type: category, options: [waste-land, sound-and-fury, their-eyes, two-focal, all-three]}
+    - {name: comparative_scope, type: category, options: [single-text, focal-texts-compared, with-other-modernists, with-later-writers]}
+    - {name: alienation_concept, type: category, options: [psychological, existential, social-class, racial, gendered, linguistic-dialect, cultural-aesthetic, economic-marxian, regional-spatial, religious, multiple]}
+    - {name: formal_locus, type: category, options: [allusion-intertextuality, narrative-voice, stream-of-consciousness, dialect-vernacular, fragmentation-structure, genre, reader-effect, none]}
+    - {name: theoretical_framework, type: category, options: [marxist, psychoanalytic, bakhtinian-dialogic, feminist, black-studies-critical-race, new-historicist-cultural, reader-response, existentialist-phenomenological, disability-studies, ecocritical, formalist-close-reading, other]}
+    - {name: intersectional, type: category, options: ["yes", partial, "no"]}
+    - {name: definition_of_alienation, type: text}
+    - {name: key_argument, type: text}
+    - {name: gaps_or_future_work_noted, type: text}
+
+critical_appraisal: false
