@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="497" viewBox="0 0 900 497" font-family="Arial, Helvetica, sans-serif" font-size="13">
+<defs><marker id="ah" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#333"/></marker></defs>
+<rect width="100%" height="100%" fill="#fff"/>
+
+<rect x="60" y="50" width="400" height="101" rx="4" fill="#ffffff" stroke="#333" stroke-width="1.2"/>
+<text x="70" y="70" xml:space="preserve">Records identified from databases (n = 6)</text>
+<text x="70" y="87" xml:space="preserve">   Scopus (n = 3)</text>
+<text x="70" y="104" xml:space="preserve">   Web of Science (n = 3)</text>
+<text x="70" y="121" xml:space="preserve">Records from other sources (n = 1)</text>
+<text x="70" y="138" xml:space="preserve">   Citation searching (n = 1)</text>
+<rect x="520" y="50" width="360" height="50" rx="4" fill="#f6f6f6" stroke="#333" stroke-width="1.2"/>
+<text x="530" y="70" xml:space="preserve">Records removed before screening:</text>
+<text x="530" y="87" xml:space="preserve">   Duplicate records (n = 1)</text>
+<line x1="460" y1="75" x2="520" y2="75" stroke="#333" stroke-width="1.4" marker-end="url(#ah)"/>
+<line x1="260.0" y1="151" x2="260.0" y2="181" stroke="#333" stroke-width="1.4" marker-end="url(#ah)"/>
+<rect x="60" y="181" width="400" height="33" rx="4" fill="#ffffff" stroke="#333" stroke-width="1.2"/>
+<text x="70" y="201" xml:space="preserve">Records screened (title/abstract) (n = 6)</text>
+<rect x="520" y="181" width="360" height="33" rx="4" fill="#f6f6f6" stroke="#333" stroke-width="1.2"/>
+<text x="530" y="201" xml:space="preserve">Records excluded (n = 1)</text>
+<line x1="460" y1="201" x2="520" y2="201" stroke="#333" stroke-width="1.4" marker-end="url(#ah)"/>
+<line x1="260.0" y1="214" x2="260.0" y2="244" stroke="#333" stroke-width="1.4" marker-end="url(#ah)"/>
+<rect x="60" y="244" width="400" height="33" rx="4" fill="#ffffff" stroke="#333" stroke-width="1.2"/>
+<text x="70" y="264" xml:space="preserve">Reports sought for retrieval (n = 5)</text>
+<rect x="520" y="244" width="360" height="33" rx="4" fill="#f6f6f6" stroke="#333" stroke-width="1.2"/>
+<text x="530" y="264" xml:space="preserve">Reports not retrieved (n = 1)</text>
+<line x1="460" y1="264" x2="520" y2="264" stroke="#333" stroke-width="1.4" marker-end="url(#ah)"/>
+<line x1="260.0" y1="277" x2="260.0" y2="307" stroke="#333" stroke-width="1.4" marker-end="url(#ah)"/>
+<rect x="60" y="307" width="400" height="33" rx="4" fill="#ffffff" stroke="#333" stroke-width="1.2"/>
+<text x="70" y="327" xml:space="preserve">Reports assessed for eligibility (n = 4)</text>
+<rect x="520" y="307" width="360" height="50" rx="4" fill="#f6f6f6" stroke="#333" stroke-width="1.2"/>
+<text x="530" y="327" xml:space="preserve">Reports excluded (n = 1):</text>
+<text x="530" y="344" xml:space="preserve">   Wrong publication type (n = 1)</text>
+<line x1="460" y1="327" x2="520" y2="327" stroke="#333" stroke-width="1.4" marker-end="url(#ah)"/>
+<line x1="260.0" y1="340" x2="260.0" y2="387" stroke="#333" stroke-width="1.4" marker-end="url(#ah)"/>
+<rect x="60" y="387" width="400" height="33" rx="4" fill="#eaf3ea" stroke="#333" stroke-width="1.2"/>
+<text x="70" y="407" xml:space="preserve">Sources of evidence included in review (n = 3)</text>
+<rect x="10" y="50" width="32" height="101" rx="4" fill="#cfe0f3" stroke="#333"/>
+<text x="26" y="100.5" transform="rotate(-90 26 100.5)" text-anchor="middle" dominant-baseline="middle" font-weight="bold">Identification</text>
+<rect x="10" y="181" width="32" height="176" rx="4" fill="#cfe0f3" stroke="#333"/>
+<text x="26" y="269.0" transform="rotate(-90 26 269.0)" text-anchor="middle" dominant-baseline="middle" font-weight="bold">Screening</text>
+<rect x="10" y="387" width="32" height="90" rx="4" fill="#cfe0f3" stroke="#333"/>
+<text x="26" y="432.0" transform="rotate(-90 26 432.0)" text-anchor="middle" dominant-baseline="middle" font-weight="bold">Included</text>
+</svg>
