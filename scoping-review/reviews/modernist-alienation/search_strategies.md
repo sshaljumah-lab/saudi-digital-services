@@ -78,7 +78,7 @@ ti,ab,su("Waste Land" OR "Sound and the Fury" OR "Their Eyes Were Watching God" 
 Date: 1990-2026; Manuscript type: Doctoral dissertations
 ```
 
-## 7. OpenAlex and Crossref (run by the program: `prisma-scr search`)
+## 7. OpenAlex (run by the program: `prisma-scr search`)
 
 Strings are in `protocol.yaml`. Pilot run (2026-11-23), title/abstract, 1990–2026:
 
@@ -91,6 +91,20 @@ The top results of the second string mix relevant items with noise, such as Paqu
 *Callaloo* article (relevant) next to marketing and Brodsky papers (noise). OpenAlex
 abstract coverage for literary studies is thin, so it supplements MLA IB and cannot
 replace it. Expect roughly 1,500–3,000 records across all sources before deduplication.
+
+### Final OpenAlex run (2026-11-23)
+
+Title/abstract field, 1990–2026: **832 records** retrieved, all of them; 827 unique after
+deduplication. 467 name a focal author or text *and* use an alienation term in the
+title or abstract.
+
+### Crossref: trialled and dropped (2026-11-23)
+
+Crossref's API has no boolean operators. The query is matched by word relevance, so the top
+1,000 results were dominated by "waste", "land" and "eyes" matches (e.g. mine-waste and
+insect-eye papers). None of the 995 unique records paired a focal text with an alienation
+term. The database was dropped. Report this under PRISMA-ScR item 7 (information sources)
+as a deviation from the protocol. Details are in `data/audit_log.jsonl`.
 
 ## Peer review of the search
 

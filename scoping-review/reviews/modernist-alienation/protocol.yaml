@@ -64,8 +64,9 @@ search:
       field: title_and_abstract    # title_and_abstract | title | abstract | fulltext
       max_results: 3000
     crossref:
-      enabled: true
-      # Crossref has no boolean search: results are relevance-ranked and the top max_results are kept.
+      enabled: false
+      # Trialled 2026-11-23 and dropped: Crossref has no boolean search, and its relevance-ranked
+      # top 1,000 contained no record pairing a focal text with an alienation term (0/995).
       query: 'alienation estrangement Waste Land Eliot Faulkner Sound and the Fury Hurston Their Eyes Were Watching God'
       max_results: 1000
     pubmed:

@@ -164,3 +164,14 @@ def test_openalex_params_field():
     assert p["search"] == "a" and "filter" not in p
     with pytest.raises(ValueError):
         openalex_params("a", None, "body")
+
+
+def test_identical_metadata_records_counted_as_duplicates(tmp_path):
+    from prisma_scr.store import make_record
+    s = Store(tmp_path)
+    a = make_record(title="Same title here", year=2000, doi="10.1/x", source="OpenAlex", source_id="W1")
+    b = make_record(title="Same title here", year=2000, doi="10.1/x", source="OpenAlex", source_id="W2")
+    assert s.add([a, b]) == 2
+    assert len(s.records) == 2 and len(s.unique()) == 1
+    again = make_record(title="Same title here", year=2000, doi="10.1/x", source="OpenAlex", source_id="W1")
+    assert s.add([again]) == 0  # re-import is a no-op

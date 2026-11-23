@@ -1,21 +1,5 @@
 [
  {
-  "source": "Crossref",
-  "origin": "database",
-  "date": "2026-11-23",
-  "query": "alienation estrangement Waste Land Eliot Faulkner Sound and the Fury Hurston Their Eyes Were Watching God",
-  "limits": {
-   "years": [
-    1990,
-    2026
-   ],
-   "note": "relevance-ranked; top max_results kept"
-  },
-  "max_results": 1000,
-  "n": 1000,
-  "added": 999
- },
- {
   "source": "OpenAlex",
   "origin": "database",
   "date": "2026-11-23",
@@ -29,6 +13,6 @@
   },
   "max_results": 3000,
   "n": 832,
-  "added": 828
+  "added": 832
  }
 ]

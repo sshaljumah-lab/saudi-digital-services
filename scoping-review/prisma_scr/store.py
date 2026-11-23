@@ -87,10 +87,24 @@ class Store:
         return self._index.get(rid)
 
     def add(self, recs: list[dict]) -> int:
+        """Add records. Re-importing the same record (same id and source_id) is a no-op.
+        A different record with identical metadata (e.g. two database entries for one
+        work) is kept as an identified record and marked as a duplicate, so PRISMA counts
+        of identified records and removed duplicates stay correct."""
         added = 0
         for r in recs:
-            if r["id"] in self._index or not r["title"]:
-                continue
+            if not r["title"]:
+                # Keep it: it was identified by the search, so it must be counted and screened.
+                r["title"] = "[No title in source record]"
+            if r["id"] in self._index:
+                first = self._index[r["id"]]
+                if first.get("source_id", "") == r.get("source_id", ""):
+                    continue
+                n = 2
+                while f"{r['id']}-{n}" in self._index:
+                    n += 1
+                r["duplicate_of"] = first["id"]
+                r["id"] = f"{r['id']}-{n}"
             self.records.append(r)
             self._index[r["id"]] = r
             added += 1
