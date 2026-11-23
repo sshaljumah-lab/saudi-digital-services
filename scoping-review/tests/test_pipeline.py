@@ -154,3 +154,13 @@ def test_ft_exclusion_requires_reason(tmp_path):
 def test_missing_protocol(tmp_path):
     with pytest.raises(SystemExit):
         run(tmp_path, "status")
+
+
+def test_openalex_params_field():
+    from prisma_scr.sources import openalex_params
+    p = openalex_params("a AND b", [1990, 2026])
+    assert p["filter"] == "title_and_abstract.search:a AND b,publication_year:1990-2026" and "search" not in p
+    p = openalex_params("a", None, "fulltext")
+    assert p["search"] == "a" and "filter" not in p
+    with pytest.raises(ValueError):
+        openalex_params("a", None, "body")

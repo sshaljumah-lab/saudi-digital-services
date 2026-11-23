@@ -46,7 +46,8 @@ def cmd_search(a):
             raise SystemExit(f"No query configured for {key} in protocol.yaml")
         print(f"Searching {DISPLAY[key]} ...")
         try:
-            recs = ENGINES[key](q, int(cfg.get("max_results", 1000)), years)
+            kwargs = {"field": cfg.get("field", "title_and_abstract")} if key == "openalex" else {}
+            recs = ENGINES[key](q, int(cfg.get("max_results", 1000)), years, **kwargs)
         except Exception as e:  # keep going with other databases
             print(f"  ! {DISPLAY[key]} search failed: {e}")
             continue
@@ -54,7 +55,9 @@ def cmd_search(a):
             r["origin"] = "database"
         added = store.add(recs)
         store.log_search({"source": DISPLAY[key], "origin": "database", "date": today, "query": q,
-                          "limits": {"years": years}, "n": len(recs), "added": added})
+                          "limits": {"years": years, **({"field": cfg.get("field", "title_and_abstract")} if key == "openalex" else {}),
+                                     **({"note": "relevance-ranked; top max_results kept"} if key == "crossref" else {})},
+                          "max_results": int(cfg.get("max_results", 1000)), "n": len(recs), "added": added})
         store.audit("search", source=DISPLAY[key], n=len(recs), added=added)
         print(f"  {len(recs)} records retrieved, {added} new")
     store.save()

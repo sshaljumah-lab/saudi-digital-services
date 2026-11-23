@@ -44,16 +44,49 @@ def _openalex_abstract(inv: dict | None) -> str:
     return " ".join(w for _, w in sorted(pos))
 
 
-def search_openalex(query: str, max_results: int, years=None, progress=print) -> list[dict]:
-    params = {"search": query, "per-page": "200", "cursor": "*"}
+OPENALEX_FIELDS = {"title_and_abstract", "title", "abstract", "fulltext"}
+
+
+def openalex_params(query: str, years=None, field: str = "title_and_abstract") -> dict:
+    """Build OpenAlex /works parameters. `field` limits where the boolean query is matched;
+    'fulltext' uses the general `search` parameter (title, abstract and full text)."""
+    if field not in OPENALEX_FIELDS:
+        raise ValueError(f"openalex field must be one of {sorted(OPENALEX_FIELDS)}")
+    params = {"per-page": "200", "cursor": "*"}
+    filters = []
+    if field == "fulltext":
+        params["search"] = query
+    else:
+        filters.append(f"{field}.search:{query}")
     if years:
-        params["filter"] = f"publication_year:{years[0]}-{years[1]}"
+        filters.append(f"publication_year:{years[0]}-{years[1]}")
+    if filters:
+        params["filter"] = ",".join(filters)
+    return params
+
+
+def search_openalex(query: str, max_results: int, years=None, progress=print,
+                    field: str = "title_and_abstract") -> list[dict]:
+    """Page through OpenAlex results. Without an API key OpenAlex only allows numbered
+    pages (up to 10,000 results); with OPENALEX_API_KEY set, cursor paging is used."""
+    params = openalex_params(query, years, field)
+    params["sort"] = "publication_date:desc"   # stable order across numbered pages
     if _mailto():
         params["mailto"] = _mailto()
-    out = []
+    key = os.environ.get("OPENALEX_API_KEY", "")
+    if key:
+        params["api_key"] = key
+    else:
+        params.pop("cursor", None)
+        params["page"] = 1
+    out, seen = [], set()
     while len(out) < max_results:
         data = json.loads(_get("https://api.openalex.org/works?" + urllib.parse.urlencode(params)))
-        for w in data.get("results", []):
+        results = data.get("results", [])
+        for w in results:
+            if w.get("id") in seen:
+                continue
+            seen.add(w.get("id"))
             out.append(make_record(
                 title=w.get("title") or w.get("display_name") or "",
                 abstract=_openalex_abstract(w.get("abstract_inverted_index")),
@@ -65,11 +98,20 @@ def search_openalex(query: str, max_results: int, years=None, progress=print) ->
                 pub_type=w.get("type", ""), language=w.get("language") or "",
                 source="OpenAlex", source_id=w.get("id", ""),
             ))
-        progress(f"  OpenAlex: {len(out)} / {data.get('meta', {}).get('count', '?')}")
-        cursor = data.get("meta", {}).get("next_cursor")
-        if not cursor or not data.get("results"):
+        total = data.get("meta", {}).get("count", 0)
+        progress(f"  OpenAlex: {len(out)} / {total}")
+        if not results:
             break
-        params["cursor"] = cursor
+        if key:
+            cursor = data.get("meta", {}).get("next_cursor")
+            if not cursor:
+                break
+            params["cursor"] = cursor
+        else:
+            if params["page"] * int(params["per-page"]) >= min(total, 10000):
+                break
+            params["page"] += 1
+        time.sleep(0.2)
     return out[:max_results]
 
 

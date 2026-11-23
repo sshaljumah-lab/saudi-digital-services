@@ -62,6 +62,7 @@ search:
     openalex:
       enabled: true
       query: '("e-government" OR "electronic government" OR "digital government" OR "m-government" OR "e-services") AND ("Saudi Arabia" OR Saudi OR KSA)'
+      field: title_and_abstract   # title_and_abstract | title | abstract | fulltext
       max_results: 2000
     crossref:
       enabled: true

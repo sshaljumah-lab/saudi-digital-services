@@ -55,15 +55,17 @@ exclusion_reasons:
   - "Duplicate publication (e.g. article reprinted as book chapter)"
 
 search:
-  date_of_search: null
+  date_of_search: '2026-11-23'
   databases:
     openalex:
       enabled: true
       # Pilot 2026-11-23 (title/abstract, 1990-2026): 490 records, 363 typed as articles.
       query: '(alienation OR alienated OR estrangement OR estranged OR displacement OR isolation) AND ("T. S. Eliot" OR "Waste Land" OR Faulkner OR "Sound and the Fury" OR Hurston OR "Their Eyes Were Watching God")'
+      field: title_and_abstract    # title_and_abstract | title | abstract | fulltext
       max_results: 3000
     crossref:
       enabled: true
+      # Crossref has no boolean search: results are relevance-ranked and the top max_results are kept.
       query: 'alienation estrangement Waste Land Eliot Faulkner Sound and the Fury Hurston Their Eyes Were Watching God'
       max_results: 1000
     pubmed:
