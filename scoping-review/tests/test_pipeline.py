@@ -175,3 +175,31 @@ def test_identical_metadata_records_counted_as_duplicates(tmp_path):
     assert len(s.records) == 2 and len(s.unique()) == 1
     again = make_record(title="Same title here", year=2000, doi="10.1/x", source="OpenAlex", source_id="W1")
     assert s.add([again]) == 0  # re-import is a no-op
+
+
+def test_flags_and_pilot_sample(tmp_path):
+    import csv as _csv
+    from prisma_scr.screening import flags
+    proto = {"eligibility": {"years": [1990, 2026], "languages": ["en"]},
+             "screening": {"required_any_terms": ["faulkner"]}}
+    r = {"title": "A review", "abstract": "", "keywords": [], "year": 1985, "language": "fr", "pub_type": "book-review"}
+    f = flags(r, proto)
+    assert "Outside 1990-2026" in f and "Language: fr" in f and "Type: book-review" in f
+    assert "No focal term in title/abstract" in f
+    proj = tmp_path / "p"
+    run(proj, "init")
+    run(proj, "import", str(FX / "scopus.csv"), str(FX / "wos.ris"), "--source", "X")
+    for rv in ("R1", "R2"):
+        run(proj, "screen", "export", "--stage", "ta", "--reviewer", rv, "--sample", "3")
+    ids = [[row["id"] for row in _csv.DictReader((proj / "screening" / f"ta_pilot_{rv}.csv").open(encoding="utf-8-sig"))]
+           for rv in ("R1", "R2")]
+    assert len(ids[0]) == 3 and sorted(ids[0]) == sorted(ids[1])
+
+
+def test_protocol_document(tmp_path):
+    proj = tmp_path / "p"
+    run(proj, "init")
+    run(proj, "import", str(FX / "wos.ris"), "--source", "WoS")
+    run(proj, "protocol")
+    md = (proj / "output" / "protocol_registration.md").read_text()
+    assert "## 5. Eligibility criteria" in md and "Records identified to date: 3" in md

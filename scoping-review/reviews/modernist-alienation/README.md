@@ -15,7 +15,14 @@ can evidence the article's literature-review claims, and it is publishable on it
 PCC, eligibility, and the charting form are in [`protocol.yaml`](protocol.yaml). Database
 strategies and the pilot search are in [`search_strategies.md`](search_strategies.md).
 
-## Pilot (2026-11-23)
+## Status (2026-11-23)
+
+- OpenAlex searched: 832 identified, 1 duplicate, **831 to screen**. Crossref was trialled and dropped (see `search_strategies.md`).
+- Pilot screening sheets (50 records, seed 2026) are exported for R1 and R2.
+- Main screening sheets are exported *after* the pilot is imported, so pilot records are not screened twice. Run the subscription-database searches first, then export.
+- Screening sheets carry advisory `flags` (book reviews, ineligible language, no focal term). Flagged records are listed last. Reviewers still decide every record.
+
+## Pilot search (2026-11-23)
 
 The OpenAlex title/abstract search returned **490 records** (1990–2026, 363 journal
 articles), mixed in precision. MLA International Bibliography must be the core database.
@@ -25,11 +32,11 @@ Full search estimate: 1,500–3,000 records before deduplication.
 
 | Step | Command | PRISMA-ScR items |
 |---|---|---|
-| 0. Register protocol on OSF; librarian peer-reviews MLA IB strategy | — | 5 |
+| 0. Register protocol on OSF (draft: `prisma-scr protocol` → `output/protocol_registration.md`); librarian peer-reviews MLA IB strategy | `prisma-scr protocol` | 5 |
 | 1. Search OpenAlex + Crossref | `prisma-scr search` | 7, 8 |
 | 2. Import MLA IB, JSTOR, MUSE, WoS, Scopus, ProQuest exports | `prisma-scr import FILE --source "MLA IB" --date … --query '…'` | 7, 8 |
 | 3. Deduplicate and check matches | `prisma-scr dedupe --report` | 14 |
-| 4. Pilot screening: both reviewers screen the same 50 records, discuss, refine criteria | `prisma-scr screen export --stage ta --reviewer R1` | 9 |
+| 4. Pilot screening: both reviewers screen the same 50 records (`screening/ta_pilot_R1.csv`, `ta_pilot_R2.csv`, already exported), import, reconcile, discuss, refine criteria | `prisma-scr screen import screening/ta_pilot_R1.csv --stage ta --reviewer R1`, then `screen reconcile --stage ta` | 9 |
 | 5. Title/abstract screening (independent, dual) | `screen import` / `screen interactive`, then `screen reconcile --stage ta` | 9, 14 |
 | 6. Full-text screening with exclusion reasons | `--stage ft` | 9, 14 |
 | 7. Citation searching of included sources; import with `--kind other` | `prisma-scr import refs.ris --source "Citation searching" --kind other` | 7, 14 |

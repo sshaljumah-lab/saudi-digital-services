@@ -38,18 +38,58 @@ def priority_score(r: dict, terms: list[str]) -> int:
 
 
 # ------------------------------------------------------------ CSV round-trip
-def export_sheet(store: Store, stage: str, reviewer: str, out: Path, terms: list[str]) -> int:
+DEFAULT_FLAG_TYPES = ["book-review", "editorial", "erratum", "letter", "paratext", "peer-review", "retraction"]
+
+
+def flags(r: dict, protocol: dict) -> list[str]:
+    """Advisory, rule-based flags shown to reviewers. They never set a decision."""
+    elig = protocol.get("eligibility") or {}
+    scr = protocol.get("screening") or {}
+    out = []
+    if r["title"].startswith("[No title"):
+        out.append("No title in source record")
+    years = elig.get("years")
+    if years and r.get("year") and not (years[0] <= r["year"] <= years[1]):
+        out.append(f"Outside {years[0]}-{years[1]}")
+    langs = [l.lower() for l in elig.get("languages") or []]
+    lang = (r.get("language") or "").lower()[:2]
+    if langs and lang and lang not in langs:
+        out.append(f"Language: {r['language']}")
+    ftypes = scr.get("flag_types", DEFAULT_FLAG_TYPES)
+    if (r.get("pub_type") or "").lower() in ftypes:
+        out.append(f"Type: {r['pub_type']}")
+    need = scr.get("required_any_terms") or []
+    if need:
+        text = f"{r['title']} {r['abstract']} {' '.join(r.get('keywords', []))}".lower()
+        if not any(t.lower() in text for t in need):
+            out.append("No focal term in title/abstract")
+    return out
+
+
+def export_sheet(store: Store, stage: str, reviewer: str, out: Path, terms: list[str],
+                 protocol: dict | None = None, sample: int = 0, seed: int = 2026) -> int:
+    """Write a screening sheet. Unflagged records come first, by priority score.
+    With `sample`, write a reproducible random sample (same seed -> same records for every
+    reviewer) for pilot/calibration screening."""
+    import random
+    protocol = protocol or {}
     recs = [r for r in pool(store, stage) if reviewer not in r["screening"][stage]]
-    recs.sort(key=lambda r: -priority_score(r, terms))
+    if sample:
+        everyone = sorted(pool(store, stage), key=lambda r: r["id"])
+        chosen = {r["id"] for r in random.Random(seed).sample(everyone, min(sample, len(everyone)))}
+        recs = [r for r in recs if r["id"] in chosen]
+    fl = {r["id"]: flags(r, protocol) for r in recs}
+    recs.sort(key=lambda r: (bool(fl[r["id"]]), -priority_score(r, terms)))
     out.parent.mkdir(parents=True, exist_ok=True)
-    cols = ["id", "decision", "reason", "notes", "title", "year", "authors", "venue", "doi", "url", "abstract"]
+    cols = ["id", "decision", "reason", "notes", "flags", "title", "year", "authors", "venue", "doi", "url", "abstract"]
     with out.open("w", newline="", encoding="utf-8-sig") as fh:
         w = csv.DictWriter(fh, fieldnames=cols)
         w.writeheader()
         for r in recs:
-            w.writerow({"id": r["id"], "decision": "", "reason": "", "notes": "", "title": r["title"],
-                        "year": r["year"] or "", "authors": "; ".join(r["authors"][:6]), "venue": r["venue"],
-                        "doi": r["doi"], "url": r["url"] or (f"https://doi.org/{r['doi']}" if r["doi"] else ""),
+            w.writerow({"id": r["id"], "decision": "", "reason": "", "notes": "", "flags": "; ".join(fl[r["id"]]),
+                        "title": r["title"], "year": r["year"] or "", "authors": "; ".join(r["authors"][:6]),
+                        "venue": r["venue"], "doi": r["doi"],
+                        "url": r["url"] or (f"https://doi.org/{r['doi']}" if r["doi"] else ""),
                         "abstract": r["abstract"]})
     return len(recs)
 

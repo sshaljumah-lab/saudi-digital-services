@@ -120,8 +120,9 @@ def cmd_screen(a):
     stage = a.stage
     if a.action == "export":
         rv = _stage_reviewer(a, p)
-        out = Path(a.out) if a.out else proj / "screening" / f"{stage}_{rv}.csv"
-        n = screening.export_sheet(store, stage, rv, out, terms)
+        name = f"{stage}_pilot_{rv}.csv" if a.sample else f"{stage}_{rv}.csv"
+        out = Path(a.out) if a.out else proj / "screening" / name
+        n = screening.export_sheet(store, stage, rv, out, terms, p, a.sample, a.seed)
         print(f"Wrote {n} records to {out}\nFill the 'decision' column with include / exclude / maybe"
               + (" / not_retrieved, and 'reason' for exclusions" if stage == "ft" else "") + ".")
         if stage == "ft" and reasons:
@@ -210,6 +211,15 @@ def cmd_report(a):
     print(f"Included sources: {c['included']}")
 
 
+def cmd_protocol(a):
+    proj = _proj(a)
+    p = load_protocol(proj)
+    out = proj / "output" / "protocol_registration.md"
+    out.parent.mkdir(exist_ok=True)
+    out.write_text(report.protocol_md(Store(proj), p), encoding="utf-8")
+    print(f"Wrote {out}")
+
+
 def cmd_status(a):
     proj = _proj(a)
     p = load_protocol(proj)
@@ -265,6 +275,8 @@ def build_parser():
     s.add_argument("--stage", choices=["ta", "ft"], default="ta", help="ta = title/abstract, ft = full text")
     s.add_argument("--reviewer", help="reviewer name from protocol (default: first)")
     s.add_argument("--out", help="output CSV path for export")
+    s.add_argument("--sample", type=int, default=0, help="export a random pilot sample of N records")
+    s.add_argument("--seed", type=int, default=2026, help="random seed for --sample (same seed = same records)")
     s.set_defaults(func=cmd_screen)
 
     s = sub.add_parser("chart", help="data charting: export form | import completed form")
@@ -276,6 +288,9 @@ def build_parser():
     s = sub.add_parser("report", help="generate PRISMA-ScR flow diagram, checklist and manuscript draft")
     s.add_argument("--title-on-diagram", action="store_true")
     s.set_defaults(func=cmd_report)
+
+    s = sub.add_parser("protocol", help="write a protocol document for registration (e.g. OSF)")
+    s.set_defaults(func=cmd_protocol)
 
     s = sub.add_parser("status", help="show progress and the next step")
     s.set_defaults(func=cmd_status)

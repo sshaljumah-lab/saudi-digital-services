@@ -84,6 +84,9 @@ search:
 
 screening:
   reviewers: ["R1", "R2"]
+  # Advisory flags in screening sheets (reviewers still decide every record):
+  required_any_terms: ["waste land", "eliot", "faulkner", "sound and the fury", "compson", "benjy", "hurston", "their eyes were watching god", "janie"]
+  flag_types: ["book-review", "editorial", "erratum", "letter", "paratext", "peer-review", "retraction"]
   priority_terms: ["alienation", "alienated", "estrangement", "waste land", "sound and the fury", "their eyes were watching god", "faulkner", "hurston", "dialect", "modernism"]
 
 charting:
