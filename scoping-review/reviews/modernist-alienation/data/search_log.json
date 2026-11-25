@@ -1,0 +1,18 @@
+[
+ {
+  "source": "OpenAlex",
+  "origin": "database",
+  "date": "2026-11-23",
+  "query": "(alienation OR alienated OR estrangement OR estranged OR displacement OR isolation) AND (\"T. S. Eliot\" OR \"Waste Land\" OR Faulkner OR \"Sound and the Fury\" OR Hurston OR \"Their Eyes Were Watching God\")",
+  "limits": {
+   "years": [
+    1990,
+    2026
+   ],
+   "field": "title_and_abstract"
+  },
+  "max_results": 3000,
+  "n": 832,
+  "added": 832
+ }
+]

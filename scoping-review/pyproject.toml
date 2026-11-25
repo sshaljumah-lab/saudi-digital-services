@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prisma-scr"
+version = "1.0.0"
+description = "Command-line pipeline for running and reporting a PRISMA-ScR scoping review"
+requires-python = ">=3.9"
+dependencies = ["PyYAML>=5.4"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.scripts]
+prisma-scr = "prisma_scr.cli:main"
+
+[tool.setuptools]
+packages = ["prisma_scr"]
